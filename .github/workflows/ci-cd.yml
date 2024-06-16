@@ -37,7 +37,7 @@ jobs:
           docker build -t portfolio-website .
       
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        run: echo "${{ dckr_pat_kIxA08n2rTqY986q3XQONwgOfVs}}" | docker login -u "${{ nomanahmed935635867}}" --password-stdin
 
       - name: Push Docker image to Docker Hub
         run: |
