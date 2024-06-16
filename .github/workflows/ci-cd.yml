@@ -32,11 +32,17 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-      - name: Run tests
+      - name: Build Docker image
         run: |
-          # Add your test command here
-          # For example, if you have tests in tests/ directory
-          # python -m unittest discover -s tests
+          docker build -t portfolio-website .
+      
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker tag portfolio-website:latest ${{ secrets.DOCKER_HUB_USERNAME }}/portfolio-website:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/portfolio-website:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,19 +52,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v1
         with:
-          python-version: '3.x'
+          version: 'latest'
 
-      - name: Install dependencies
+      - name: Set up kubeconfig
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
-      - name: Deploy application locally
+      - name: Deploy to Kubernetes
         run: |
-          echo "Starting deployment script"
-          chmod +x ./deploy_local.sh
-          ./deploy_local.sh
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
 
