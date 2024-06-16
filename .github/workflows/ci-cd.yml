@@ -41,8 +41,8 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker tag portfolio-website:latest ${{ secrets.DOCKER_HUB_USERNAME }}/portfolio-website:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/portfolio-website:latest
+          docker tag portfolio-website:latest ${{ nomanahmed935635867}}/portfolio-website:latest
+          docker push ${{ dckr_pat_kIxA08n2rTqY986q3XQONwgOfVs}}/portfolio-website:latest
 
   deploy:
     runs-on: ubuntu-latest
