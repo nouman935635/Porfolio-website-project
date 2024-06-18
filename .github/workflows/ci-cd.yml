@@ -58,7 +58,7 @@ jobs:
           version: 'latest'
 
       - name: Create .kube directory
-        run: mkdir -p $HOME/.kube
+        run:sudo mkdir -p $HOME/.kube
 
       - name: Decode and set up kubeconfig
         run: |
